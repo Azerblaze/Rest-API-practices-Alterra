@@ -5,10 +5,11 @@ import (
 	"strconv"
 
 	"praktikum/config"
+	"praktikum/lib/database"
 	"praktikum/model"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 )
 
 //get all users
@@ -34,7 +35,7 @@ func GetUserController(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, map[string]interface{}{
-		"message": "success get all users",
+		"message": "success get user",
 		"users":   config.DB.First(&users, id),
 	})
 }
@@ -93,5 +94,37 @@ func UpdateUserController(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"message": "success update user",
 		"users":   user,
+	})
+}
+
+func LoginUsersController(c echo.Context) error {
+	user := model.User{}
+	c.Bind(&user)
+
+	users, e := database.LoginUsers(&user)
+	if e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, e.Error())
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"status": "succes login",
+		"users":  users,
+	})
+}
+
+func GetUserDetailController(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	users, err := database.GetDetailUsers((id))
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"status": "success",
+		"users":  users,
 	})
 }

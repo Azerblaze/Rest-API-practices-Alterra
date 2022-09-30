@@ -8,7 +8,7 @@ import (
 	"praktikum/model"
 
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo"
 )
 
 //get all books

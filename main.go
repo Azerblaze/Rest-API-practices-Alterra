@@ -11,6 +11,7 @@ func main() {
 	e := route.New()
 	// implementasi middleware logger
 	m.LogMiddleware(e)
+	// m.JWTWithConfig()
 	// start server
 	e.Logger.Fatal(e.Start(":8000"))
 }
